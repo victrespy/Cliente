@@ -1,0 +1,31 @@
+body{
+    background-color: rgb(98, 155, 145);
+}
+section{
+    background-color: rgba(255, 255, 255, 0.5);
+    width: 50%;
+    margin: auto;
+    text-align: center;
+    border-radius: 10px;
+    padding: 30px;
+    margin-top: 10vh;
+}
+p{
+    text-align: left;
+}
+button {
+  border: none;
+  outline: none;
+  background-color: rgb(42, 87, 79);
+  padding: 10px 20px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  border-radius: 5px;
+  transition: all ease 0.1s;
+  box-shadow: 0px 5px 0px 0px rgb(98, 155, 145);
+}
+button:active {
+  transform: translateY(5px);
+  box-shadow: 0px 0px 0px 0px rgb(98, 155, 145);
+}
