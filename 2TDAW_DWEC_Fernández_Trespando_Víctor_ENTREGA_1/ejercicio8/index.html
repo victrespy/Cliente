@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EJERCICIO8</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <section>
+        <h1>EJERCICIO 8</h1>
+        <p>Un restaurante nos ha encargado una aplicación para colocar a los clientes en sus mesas.
+            En una mesa se pueden sentar de 0 (mesa vacía) a 4 comensales (mesa llena).
+            El funcionamiento es el siguiente:</p>
+        <p>Cuando llega un cliente se le pregunta cuántos son. Como el programa no está preparado
+            para colocar a grupos mayores a 4, si un cliente solicita una mesa con más comensales (por
+            ejemplo, 6), el programa dará el mensaje “Lo siento, no admitimos grupos de 6, haga grupos
+            de 4 personas como máximo e intente de nuevo” y volverá a preguntar.</p>
+        <p>Para cada grupo nuevo que llega, se busca siempre la primera mesa libre (con 0 personas).
+            Si no quedan mesas libres, se busca una donde haya hueco para todo el grupo (por ejemplo,
+            si el grupo es de dos personas, se podrá colocar en mesas donde haya una o dos personas). </p>
+        <p>Cada vez que se sientan nuevos clientes se debe mostrar el estado de las mesas. Los grupos
+            no se pueden romper, aunque haya huecos sueltos suficientes.
+            A tener en cuenta:
+            El programa comienza pidiendo el número de mesas que tiene el restaurante.
+            Inicialmente, las mesas se cargan con valores aleatorios entre 0 y 4 y mostrará por pantalla como quedan las
+            mesas inicialmente.
+            El programa seguirá pidiendo comensales hasta que se introduzca un valor negativo.</p>
+    </section>
+    <section>
+        <button onclick="ejercicio()">Ejercicio</button>
+    </section>
+    <script src="main.js"></script>
+</body>
+
+</html>
