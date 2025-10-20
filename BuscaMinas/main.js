@@ -1,62 +1,68 @@
-//Pedir dimension del tablero
-do{
-    var dimension = parseInt(prompt("Ingrese la dimension del tablero:"));
-} while (dimension < 5 || dimension > 20 || isNaN(dimension));
+//Variables globales
+var tablero;
+var tableroOculto;
+var dimension;
+var numMinas;
 
-//Generar numero de minas
-let numMinas = Math.floor(dimension * dimension * 0.2);
+function main() {
+    //Pedir dimension del tablero
+    do{
+        dimension = parseInt(prompt("Ingrese la dimension del tablero:"));
+    } while (dimension < 5 || dimension > 20 || isNaN(dimension));
 
-//Generar tablero
-let tablero = generarTablero(dimension);
+    //Generar numero de minas
+    numMinas = Math.floor(dimension * dimension * 0.2);
 
-//Colocar minas aleatoriamente
-let minasColocadas = 0;
-while (minasColocadas < numMinas) {
-    let fila = Math.floor(Math.random() * dimension);
-    let columna = Math.floor(Math.random() * dimension);
-    if (tablero[fila][columna] !== '*') {
-        tablero[fila][columna] = '*';
-        minasColocadas++;
+    //Generar tablero
+    tablero = generarTablero(dimension);
+
+    //Colocar minas aleatoriamente
+    let minasColocadas = 0;
+    while (minasColocadas < numMinas) {
+        let fila = Math.floor(Math.random() * dimension);
+        let columna = Math.floor(Math.random() * dimension);
+        if (tablero[fila][columna] !== '*') {
+            tablero[fila][columna] = '*';
+            minasColocadas++;
+        }
     }
-}
 
-//Colocar numeros en el tablero
-for (let i = 0; i < dimension; i++) {
-    for (let j = 0; j < dimension; j++) {
-        if (tablero[i][j] === '*') continue;
-        let contador = 0;
-        for (let x = -1; x <= 1; x++) {
-            for (let y = -1; y <= 1; y++) {
-                if (x === 0 && y === 0) continue;
-                let comprovarFila = i + x;
-                let comprovarColumna = j + y;
-                if (comprovarFila >= 0 && comprovarFila < dimension && comprovarColumna >= 0 && comprovarColumna < dimension) {
-                    if (tablero[comprovarFila][comprovarColumna] === '*') {
-                        contador++;
+    //Colocar numeros en el tablero
+    for (let i = 0; i < dimension; i++) {
+        for (let j = 0; j < dimension; j++) {
+            if (tablero[i][j] === '*') continue;
+            let contador = 0;
+            for (let x = -1; x <= 1; x++) {
+                for (let y = -1; y <= 1; y++) {
+                    if (x === 0 && y === 0) continue;
+                    let comprovarFila = i + x;
+                    let comprovarColumna = j + y;
+                    if (comprovarFila >= 0 && comprovarFila < dimension && comprovarColumna >= 0 && comprovarColumna < dimension) {
+                        if (tablero[comprovarFila][comprovarColumna] === '*') {
+                            contador++;
+                        }
                     }
                 }
             }
+            tablero[i][j] = contador;
         }
-        tablero[i][j] = contador;
     }
+
+    //Genero un tablero oculto
+    tableroOculto = generarTablero(dimension);
+    for (let i = 0; i < dimension; i++) {
+        for (let j = 0; j < dimension; j++) {
+            tableroOculto[i][j] = 'X';
+        }
+    }
+
+    //Bucle de los turnos
+    while (jugarTurno());
 }
 
-//Genero un tablero oculto
-let tableroOculto = generarTablero(dimension);
-for (let i = 0; i < dimension; i++) {
-    for (let j = 0; j < dimension; j++) {
-        tableroOculto[i][j] = 'X';
-    }
-}
-
-//Bucle de los turnos
-while (jugarTurno());
-
-
-
-//FUNCIONES
 
 function jugarTurno() {
+
     //Mostrar tablero
     console.clear();
     console.log("Tablero:");
@@ -65,9 +71,17 @@ function jugarTurno() {
     //Pedir coordenadas
     let fila, columna;
     do {
-        fila = parseInt(prompt("Ingrese la fila (0 a " + (dimension - 1) + "):"));
-        columna = parseInt(prompt("Ingrese la columna (0 a " + (dimension - 1) + "):"));
-    } while (fila < 0 || fila >= dimension || columna < 0 || columna >= dimension || isNaN(fila) || isNaN(columna) || tableroOculto[fila][columna] !== 'X');
+        fila = parseInt(prompt("Ingrese la fila (0 a " + (dimension - 1) + ") (Numero negativo para salir):"));
+        if (fila < 0) break;
+        columna = parseInt(prompt("Ingrese la columna (0 a " + (dimension - 1) + ") (Numero negativo para salir):"));
+        if (columna < 0) break;
+    } while (fila >= dimension || columna >= dimension || isNaN(fila) || isNaN(columna) || tableroOculto[fila][columna] !== 'X');
+
+    //Guardar la partida si el numero es negativo
+    if (fila < 0 || columna < 0) {
+        guardarPartida();
+        return false;
+    }
 
     //Revelar celda
     if (tablero[fila][columna] === '*') {
@@ -102,6 +116,7 @@ function jugarTurno() {
     return true;
 }
 
+//Si la celda es 0, revelar las celdas adyacentes
 function revelarCeldasAdyacentes(fila, columna) {
     for (let x = -1; x <= 1; x++) {
         for (let y = -1; y <= 1; y++) {
@@ -120,6 +135,7 @@ function revelarCeldasAdyacentes(fila, columna) {
     }
 }
 
+//Generar tablero vacio
 function generarTablero(dimension) {
     let tablero = [];
     for (let i = 0; i < dimension; i++) {
@@ -129,4 +145,15 @@ function generarTablero(dimension) {
         }
     }
     return tablero;
+}
+
+function guardarPartida() {
+    let partida = {
+        tablero: tablero,
+        tableroOculto: tableroOculto,
+        dimension: dimension,
+        numMinas: numMinas
+    };
+    console.clear();
+    console.log(JSON.stringify(partida));
 }
