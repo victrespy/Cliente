@@ -1,0 +1,108 @@
+/* Estilos Globales */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f3f4f6; /* Gris claro, similar a bg-gray-100 */
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 32px;
+    margin: 0;
+}
+
+/* Contenedor Principal */
+.container {
+    background-color: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Sombra suave */
+    width: 100%;
+    max-width: 512px; /* Similar a max-w-lg */
+}
+
+/* Encabezado */
+h1 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #1f2937; /* Gris oscuro */
+    margin-bottom: 24px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e5e7eb; /* Borde inferior */
+}
+
+/* Estilo del Botón */
+#addButton {
+    width: 100%;
+    background-color: #4f46e5; /* Índigo */
+    color: white;
+    font-weight: bold;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    margin-bottom: 24px;
+}
+
+#addButton:hover {
+    background-color: #4338ca; /* Índigo más oscuro */
+    transform: scale(1.01);
+}
+
+#addButton:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.5);
+}
+
+/* Lista No Ordenada */
+#itemList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Estilo base de los elementos de la lista */
+#itemList li {
+    padding: 16px;
+    background-color: #f9fafb; /* Gris muy claro */
+    color: #374151; /* Gris medio */
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    cursor: pointer;
+    transition: background-color 0.15s, transform 0.15s, box-shadow 0.15s;
+    margin-bottom: 12px; /* Espacio entre elementos */
+}
+
+#itemList li:hover:not(.seleccionado) {
+    background-color: #e0e7ff; /* Índigo muy claro en hover */
+}
+
+/* Clase para el elemento seleccionado (al hacer click) */
+.seleccionado {
+    background-color: #6366f1 !important; /* Índigo-500 */
+    color: white !important;
+    transform: scale(1.02);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+    border-color: #6366f1 !important;
+}
+
+/* Estilo para el mensaje inicial */
+.initial-message {
+    background-color: #fef3c7; /* Amarillo muy claro */
+    color: #92400e; /* Marrón oscuro */
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+}
+
+/* Estilos para las instrucciones */
+.instructions {
+    margin-top: 32px;
+    font-size: 14px;
+    color: #6b7280; /* Gris */
+    padding-top: 16px;
+    border-top: 1px solid #e5e7eb;
+}
+.instructions strong {
+    color: #374151;
+}
