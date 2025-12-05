@@ -10,17 +10,24 @@
     <div class="container">
         <h1>Buscaminas</h1>
         
-        <div class="controles">
-            <label>Dimensión del tablero: 
-                <input type="number" id="inputDimension" value="10" min="5" max="20">
-            </label>
-            <button id="btnEmpezar">Nueva Partida</button>
-        </div>
+        <button id="btnReiniciar" class="oculto">Nueva Partida</button>
 
         <h2 id="mensajeEstado">La bruma domina la noche...</h2>
         
-        <!-- El tablero se generará aquí dinámicamente -->
         <div id="tablero"></div>
+    </div>
+
+    <div id="modalConfig" class="modal-overlay">
+        <div class="modal-content">
+            <h2>Configuración Alomántica</h2>
+            <div class="controles-modal">
+                <label>Dimensión del tablero: 
+                    <input type="number" id="inputDimension" value="10" min="5" max="20">
+                </label>
+                <br><br>
+                <button id="btnEmpezar">Quemar Atium</button>
+            </div>
+        </div>
     </div>
 
     <script src="main.js"></script>

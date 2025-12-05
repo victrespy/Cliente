@@ -166,3 +166,53 @@ button:hover {
 .celda:not(.revelada) {
     animation: mist-pulse 4s infinite ease-in-out;
 }
+
+/* --- ESTILOS DE LA VENTANA MODAL (POP-UP) --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85); /* Fondo muy oscuro semitransparente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Asegurar que esté encima de todo */
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+/* Clase para ocultar elementos visualmente */
+.oculto {
+    display: none !important;
+}
+
+.modal-content {
+    background-color: #2c3e50;
+    padding: 40px;
+    border: 4px double #7f8c8d;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 50px rgba(189, 195, 199, 0.2);
+    color: #ecf0f1;
+    min-width: 300px;
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    color: #bdc3c7;
+    font-family: 'Cinzel', serif;
+    margin-bottom: 20px;
+}
+
+/* Ajuste para el botón de Reiniciar en la pantalla principal */
+#btnReiniciar {
+    margin-bottom: 20px;
+    background-color: #7f8c8d;
+    border-color: #ecf0f1;
+}
+#btnReiniciar:hover {
+    background-color: #95a5a6;
+    color: #000;
+}

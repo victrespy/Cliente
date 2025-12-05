@@ -1,29 +1,48 @@
 // --- VARIABLES GLOBALES DE ESTADO ---
 let dimension = 10;
-let tableroLogico = []; // Matriz de datos
+let tableroLogico = []; 
 let juegoTerminado = false;
 let esPrimerClick = true;
 let celdasReveladasCount = 0;
 let totalMinas = 0;
 
+// Referencias al DOM (para no buscarlas todo el rato)
+const modal = document.getElementById("modalConfig");
+const btnReiniciar = document.getElementById("btnReiniciar");
+
 // --- INICIO ---
 window.onload = function() {
-    let boton = document.getElementById("btnEmpezar");
-    boton.addEventListener("click", iniciarJuego);
+    let botonEmpezar = document.getElementById("btnEmpezar");
+    botonEmpezar.addEventListener("click", configurarYEmpezar);
     
-    // Iniciamos una partida por defecto al cargar
-    iniciarJuego();
+    btnReiniciar.addEventListener("click", mostrarModalConfiguracion);
+    
+    // Al cargar, nos aseguramos de que el modal esté visible
+    mostrarModalConfiguracion();
 };
 
-function iniciarJuego() {
+function mostrarModalConfiguracion() {
+    modal.classList.remove("oculto"); // Mostramos el pop-up
+    btnReiniciar.classList.add("oculto"); // Ocultamos el botón de reiniciar del fondo
+}
+
+function configurarYEmpezar() {
     let inputDim = document.getElementById("inputDimension");
     dimension = parseInt(inputDim.value);
     
-    // Validaciones de tamaño
+    // Validaciones
     if (isNaN(dimension) || dimension < 5) dimension = 5;
     if (dimension > 20) dimension = 20;
-    inputDim.value = dimension; // Actualizar input si se corrigió
+    inputDim.value = dimension; 
 
+    // Ocultamos el modal y mostramos el botón de reiniciar
+    modal.classList.add("oculto");
+    btnReiniciar.classList.remove("oculto");
+
+    iniciarJuego();
+}
+
+function iniciarJuego() {
     // Reiniciar estados
     juegoTerminado = false;
     esPrimerClick = true;
@@ -34,10 +53,10 @@ function iniciarJuego() {
     mensaje.textContent = "La bruma domina la noche...";
     mensaje.style.color = "#bdc3c7"; 
 
-    // 1. Generar Tablero Lógico (Datos)
+    // 1. Generar Tablero Lógico
     inicializarTableroLogico();
     
-    // 2. Generar Tablero Visible (DOM)
+    // 2. Generar Tablero Visible
     dibujarTableroDOM();
 }
 
