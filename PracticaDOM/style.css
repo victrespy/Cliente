@@ -1,73 +1,168 @@
+/* Importamos una fuente gótica/fantástica */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap');
+
 body {
-    font-family: Arial, sans-serif;
-    background-color: #282c34;
-    color: white;
+    font-family: 'Cinzel', serif; /* Fuente estilo inscripciones en metal */
+    /* Fondo: El Imperio Final, cielo oscuro y ceniza */
+    background-color: #1c1c1c; 
+    color: #bdc3c7; /* Texto plateado */
     display: flex;
     justify-content: center;
     padding-top: 50px;
+    /* Un degradado sutil que simula la caída de ceniza en la oscuridad */
+    background-image: radial-gradient(circle at center, #2c3e50 0%, #000000 100%);
+    min-height: 100vh;
 }
 
 .container {
     text-align: center;
-    background-color: rgba(255, 255, 255, 0.1);
-    padding: 20px;
-    border-radius: 10px;
+    background-color: rgba(20, 20, 20, 0.95); /* Casi negro, sólido */
+    padding: 30px;
+    border-radius: 8px;
+    /* Borde metálico (acero) */
+    border: 4px double #7f8c8d; 
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.9);
+}
+
+h1 {
+    color: #ecf0f1; /* Blanco acero */
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    margin-top: 0;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
 .controles {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    padding: 10px;
+    border-bottom: 1px solid #7f8c8d;
 }
 
 input {
-    padding: 5px;
-    width: 50px;
+    padding: 8px;
+    width: 60px;
     text-align: center;
+    background: #34495e;
+    color: white;
+    border: 1px solid #7f8c8d;
+    font-family: inherit;
+    font-weight: bold;
 }
 
 button {
-    padding: 5px 15px;
+    padding: 10px 25px;
     cursor: pointer;
-    background-color: #61dafb;
-    border: none;
+    background-color: #34495e; /* Azul acero oscuro */
+    color: #ecf0f1;
+    border: 1px solid #bdc3c7;
+    font-family: inherit;
     font-weight: bold;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+button:hover {
+    background-color: #2c3e50;
+    box-shadow: 0 0 15px rgba(189, 195, 199, 0.5); /* Resplandor alomántico */
+    transform: translateY(-2px);
+}
+
+#mensajeEstado {
+    font-size: 1.2em;
+    min-height: 1.5em;
+    color: #95a5a6;
 }
 
 #tablero {
     display: grid;
-    gap: 2px;
-    background-color: #555;
-    margin: 20px auto;
-    border: 5px solid #555;
-    /* El grid-template-columns lo definiremos en JS según la dimensión */
+    gap: 1px; /* Espacio mínimo entre nieblas */
+    background-color: #000; /* Fondo negro entre casillas */
+    margin: 25px auto;
+    border: 5px solid #555; /* Marco de hierro */
+    width: fit-content;
+    padding: 5px;
+    box-shadow: inset 0 0 20px #000;
 }
 
+/* --- ESTILO DE LAS CELDAS (LA NIEBLA) --- */
 .celda {
-    width: 30px;
-    height: 30px;
-    background-color: #999;
+    width: 45px; /* Celdas MÁS GRANDES como pediste */
+    height: 45px;
+    
+    /* Estado inicial: NIEBLA */
+    /* Usamos un degradado radial para que parezcan volutas de humo */
+    background: radial-gradient(circle, #95a5a6 20%, #34495e 90%);
+    
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
     font-weight: bold;
     user-select: none;
+    font-size: 1.4em;
+    transition: filter 0.2s;
+    position: relative;
 }
 
-.celda:hover {
-    background-color: #bbb;
+/* Efecto de "remolino" en la niebla al pasar el mouse */
+.celda:hover:not(.revelada) {
+    filter: brightness(1.3); /* La niebla brilla al tocarla */
+    z-index: 1; /* Se eleva visualmente */
 }
 
-/* Clases para cambiar el aspecto visual usando classList [cite: 253] */
+/* --- ESTILO REVELADO (EL SUELO) --- */
 .celda.revelada {
-    background-color: #ddd;
-    color: #333;
+    /* Aquí aparece tu imagen: el suelo de piedra revelado */
+    background-image: url('img/tile1.png'); 
+    background-size: cover;
+    background-repeat: no-repeat;
+    
+    /* Quitamos el color de fondo gris para ver la imagen */
+    background-color: transparent; 
+    
+    color: #fff; /* Números en blanco para contraste sobre piedra oscura */
     cursor: default;
+    
+    /* Sombra interna para dar profundidad (como si la niebla estuviera arriba) */
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.8); 
+    
+    /* Texto con borde negro para que se lea bien sobre la textura */
+    text-shadow: 
+        -1px -1px 0 #000,  
+         1px -1px 0 #000,
+        -1px  1px 0 #000,
+         1px  1px 0 #000;
 }
+
+/* Colores metálicos para los números (temática Mistborn) */
+.celda.revelada[data-val="1"] { color: #3498db; } /* Azul (Estaño) */
+.celda.revelada[data-val="2"] { color: #2ecc71; } /* Verde (Cobre) */
+.celda.revelada[data-val="3"] { color: #e74c3c; } /* Rojo (Peltre - Fuerza) */
+.celda.revelada[data-val="4"] { color: #9b59b6; } /* Púrpura */
+.celda.revelada[data-val="5"] { color: #f1c40f; } /* Oro */
+.celda.revelada[data-val="6"] { color: #e67e22; } /* Bronce */
 
 .celda.bomba {
-    background-color: #e74c3c;
+    background: #c0392b; /* Rojo sangre para la derrota */
+    background-image: none; /* Quitamos la piedra, es una explosión */
+    border: 1px solid #e74c3c;
+    box-shadow: 0 0 15px #c0392b;
+    z-index: 2;
 }
 
 .celda.bandera {
-    background-color: #f1c40f;
+    /* Mantenemos la niebla de fondo pero ponemos la bandera */
+    /* Filtro rojizo para indicar peligro/marca */
+    filter: sepia(1) hue-rotate(-50deg) saturate(3);
+}
+
+/* Animación sutil para la niebla (opcional, da vida al tablero) */
+@keyframes mist-pulse {
+    0% { opacity: 0.9; }
+    50% { opacity: 1; }
+    100% { opacity: 0.9; }
+}
+.celda:not(.revelada) {
+    animation: mist-pulse 4s infinite ease-in-out;
 }
