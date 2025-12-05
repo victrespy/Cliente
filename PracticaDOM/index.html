@@ -5,18 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buscaminas DOM</title>
     <link rel="stylesheet" href="style.css">
-    <script src="main.js" defer></script>
 </head>
 <body>
-    <main>
-        <h1>BUSCAMINAS</h1>
-        <div class="controls">
-            <label for="dimension">Dimensión (5-20):</label>
-            <input type="number" id="dimension" min="5" max="20" value="10">
-            <button onclick="iniciarJuego()">Nueva Partida</button>
+    <div class="container">
+        <h1>Buscaminas</h1>
+        
+        <div class="controles">
+            <label>Dimensión: <input type="number" id="inputDimension" value="10" min="5" max="20"></label>
+            <button id="btnEmpezar">Nueva Partida</button>
         </div>
-        <div id="mensaje" class="mensaje"></div>
-        <div id="tablero-juego" class="tablero"></div>
-    </main>
+
+        <h2 id="mensajeEstado">¡Buena suerte!</h2>
+        
+        <div id="tablero"></div>
+    </div>
+
+    <script src="main.js"></script>
 </body>
 </html>

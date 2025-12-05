@@ -1,71 +1,46 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 body {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    font-family: Arial, sans-serif;
     background-color: #282c34;
     color: white;
-    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    padding-top: 50px;
 }
 
-main {
+.container {
     text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
 }
 
-.controls {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 15px;
-    border-radius: 8px;
+.controles {
+    margin-bottom: 20px;
 }
 
 input {
-    padding: 8px;
-    border-radius: 4px;
-    border: none;
-    width: 60px;
+    padding: 5px;
+    width: 50px;
     text-align: center;
 }
 
 button {
-    padding: 8px 16px;
-    font-size: 16px;
+    padding: 5px 15px;
     cursor: pointer;
-    border: none;
-    border-radius: 5px;
     background-color: #61dafb;
-    color: #282c34;
+    border: none;
     font-weight: bold;
-    transition: background-color 0.3s;
 }
 
-button:hover {
-    background-color: #21a1f1;
-}
-
-/* El Tablero */
-.tablero {
+#tablero {
     display: grid;
     gap: 2px;
-    background-color: #444;
-    padding: 5px;
-    border-radius: 5px;
-    margin-top: 10px;
+    background-color: #555;
+    margin: 20px auto;
+    border: 5px solid #555;
+    /* El grid-template-columns lo definiremos en JS según la dimensión */
 }
 
-/* Celdas */
 .celda {
     width: 30px;
     height: 30px;
@@ -75,15 +50,14 @@ button:hover {
     align-items: center;
     cursor: pointer;
     font-weight: bold;
-    user-select: none; /* Evita que se seleccione el texto */
-    font-size: 18px;
+    user-select: none;
 }
 
 .celda:hover {
     background-color: #bbb;
 }
 
-/* Estados de la celda */
+/* Clases para cambiar el aspecto visual usando classList [cite: 253] */
 .celda.revelada {
     background-color: #ddd;
     color: #333;
@@ -92,21 +66,8 @@ button:hover {
 
 .celda.bomba {
     background-color: #e74c3c;
-    color: white;
 }
 
 .celda.bandera {
     background-color: #f1c40f;
-}
-
-/* Colores para los números */
-.num-1 { color: blue; }
-.num-2 { color: green; }
-.num-3 { color: red; }
-.num-4 { color: purple; }
-
-.mensaje {
-    font-size: 1.2rem;
-    font-weight: bold;
-    height: 20px;
 }
