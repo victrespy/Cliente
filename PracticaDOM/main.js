@@ -1,159 +1,218 @@
-//Variables globales
-var tablero;
-var tableroOculto;
-var dimension;
-var numMinas;
+// Variables globales de estado
+let tableroLogico = [];
+let dimension = 10;
+let numMinas = 0;
+let juegoTerminado = false;
+let esPrimerClick = true; // Nueva variable de control
 
-function main() {
-    //Pedir dimension del tablero
-    do{
-        dimension = parseInt(prompt("Ingrese la dimension del tablero:"));
-    } while (dimension < 5 || dimension > 20 || isNaN(dimension));
+function iniciarJuego() {
+    const inputDim = document.getElementById("dimension");
+    dimension = parseInt(inputDim.value);
 
-    //Generar numero de minas
+    if (isNaN(dimension) || dimension < 5 || dimension > 20) {
+        alert("Por favor, introduce una dimensión entre 5 y 20.");
+        return;
+    }
+
+    // Reiniciar estado
+    juegoTerminado = false;
+    esPrimerClick = true; // Reseteamos para la nueva partida
+    document.getElementById("mensaje").textContent = "";
     numMinas = Math.floor(dimension * dimension * 0.2);
+    
+    // 1. Inicializamos el tablero lógico VACÍO (todo ceros)
+    inicializarTableroVacio();
+    
+    // 2. Pintamos el tablero visual (sin minas reales todavía)
+    generarHTML();
+}
 
-    //Generar tablero
-    tablero = generarTablero(dimension);
+function inicializarTableroVacio() {
+    tableroLogico = [];
+    for (let i = 0; i < dimension; i++) {
+        tableroLogico[i] = new Array(dimension).fill(0);
+    }
+}
 
-    //Colocar minas aleatoriamente
+// Esta función se llama SOLO tras el primer clic
+function generarMinas(filaSegura, colSegura) {
     let minasColocadas = 0;
+    
     while (minasColocadas < numMinas) {
-        let fila = Math.floor(Math.random() * dimension);
-        let columna = Math.floor(Math.random() * dimension);
-        if (tablero[fila][columna] !== '*') {
-            tablero[fila][columna] = '*';
+        let f = Math.floor(Math.random() * dimension);
+        let c = Math.floor(Math.random() * dimension);
+
+        // CONDICIÓN CLAVE:
+        // No poner mina si ya hay una ('*')
+        // NI si es la casilla del click
+        // NI si es una casilla adyacente (para asegurar que sea un 0)
+        
+        let esZonaSegura = (Math.abs(f - filaSegura) <= 1 && Math.abs(c - colSegura) <= 1);
+
+        if (tableroLogico[f][c] !== '*' && !esZonaSegura) {
+            tableroLogico[f][c] = '*';
             minasColocadas++;
         }
     }
 
-    //Colocar numeros en el tablero
+    // Una vez colocadas las minas, calculamos los números para todo el tablero
+    calcularNumeros();
+}
+
+function calcularNumeros() {
     for (let i = 0; i < dimension; i++) {
         for (let j = 0; j < dimension; j++) {
-            if (tablero[i][j] === '*') continue;
+            if (tableroLogico[i][j] === '*') continue;
+            
             let contador = 0;
+            // Recorrer vecinos
             for (let x = -1; x <= 1; x++) {
                 for (let y = -1; y <= 1; y++) {
                     if (x === 0 && y === 0) continue;
-                    let comprovarFila = i + x;
-                    let comprovarColumna = j + y;
-                    if (comprovarFila >= 0 && comprovarFila < dimension && comprovarColumna >= 0 && comprovarColumna < dimension) {
-                        if (tablero[comprovarFila][comprovarColumna] === '*') {
-                            contador++;
-                        }
+                    let f = i + x;
+                    let c = j + y;
+                    if (f >= 0 && f < dimension && c >= 0 && c < dimension) {
+                        if (tableroLogico[f][c] === '*') contador++;
                     }
                 }
             }
-            tablero[i][j] = contador;
+            tableroLogico[i][j] = contador;
         }
     }
-
-    //Genero un tablero oculto
-    tableroOculto = generarTablero(dimension);
-    for (let i = 0; i < dimension; i++) {
-        for (let j = 0; j < dimension; j++) {
-            tableroOculto[i][j] = 'X';
-        }
-    }
-
-    //Bucle de los turnos
-    while (jugarTurno());
 }
 
+// Pinta el tablero en el DOM
+function generarHTML() {
+    const contenedor = document.getElementById("tablero-juego");
+    contenedor.innerHTML = "";
+    contenedor.style.gridTemplateColumns = `repeat(${dimension}, 1fr)`;
 
-function jugarTurno() {
+    for (let i = 0; i < dimension; i++) {
+        for (let j = 0; j < dimension; j++) {
+            const celda = document.createElement("div");
+            celda.classList.add("celda");
+            celda.dataset.fila = i;
+            celda.dataset.col = j;
+            celda.dataset.revelada = "false";
 
-    //Mostrar tablero
-    console.clear();
-    console.log("Tablero:");
-    console.table(tableroOculto);
+            celda.addEventListener("click", () => clicCelda(i, j, celda));
+            celda.addEventListener("contextmenu", (e) => {
+                e.preventDefault();
+                alternarBandera(celda);
+            });
 
-    //Pedir coordenadas
-    let fila, columna;
-    do {
-        fila = parseInt(prompt("Ingrese la fila (0 a " + (dimension - 1) + ") (Numero negativo para salir):"));
-        if (fila < 0) break;
-        columna = parseInt(prompt("Ingrese la columna (0 a " + (dimension - 1) + ") (Numero negativo para salir):"));
-        if (columna < 0) break;
-    } while (fila >= dimension || columna >= dimension || isNaN(fila) || isNaN(columna) || tableroOculto[fila][columna] !== 'X');
-
-    //Guardar la partida si el numero es negativo
-    if (fila < 0 || columna < 0) {
-        guardarPartida();
-        return false;
+            contenedor.appendChild(celda);
+        }
     }
+}
 
-    //Revelar celda
-    if (tablero[fila][columna] === '*') {
-        console.clear();
-        alert("¡BOOM! Has perdido");
-        console.table(tablero);
-        return false;
+function clicCelda(fila, col, elemento) {
+    if (juegoTerminado || elemento.dataset.revelada === "true" || elemento.classList.contains("bandera")) return;
+
+    // --- LÓGICA DEL PRIMER CLICK ---
+    if (esPrimerClick) {
+        generarMinas(fila, col); // Generamos el mapa excluyendo esta zona
+        esPrimerClick = false;   // Ya no es el primer click
+        
+        // Nota: Como el tableroLogico ha cambiado, al continuar abajo
+        // leerá el valor correcto (que será 0 garantizado).
+    }
+    // -------------------------------
+
+    const valor = tableroLogico[fila][col];
+
+    if (valor === '*') {
+        elemento.classList.add("bomba");
+        elemento.textContent = "💣";
+        terminarJuego(false);
+    } 
+    else if (valor > 0) {
+        revelarVisualmente(elemento, valor);
+        comprobarVictoria();
+    } 
+    else {
+        revelarRecursivo(fila, col);
+        comprobarVictoria();
+    }
+}
+
+function alternarBandera(elemento) {
+    if (juegoTerminado || elemento.dataset.revelada === "true") return;
+    elemento.classList.toggle("bandera");
+    elemento.textContent = elemento.classList.contains("bandera") ? "🚩" : "";
+}
+
+function revelarVisualmente(elemento, valor) {
+    // Si ya estaba revelada, no hacemos nada (evita bucles raros o repintados)
+    if(elemento.dataset.revelada === "true") return;
+
+    elemento.dataset.revelada = "true";
+    elemento.classList.add("revelada");
+    if (valor !== 0) {
+        elemento.textContent = valor;
+        elemento.classList.add(`num-${valor}`);
+    }
+}
+
+function revelarRecursivo(fila, col) {
+    const selector = `.celda[data-fila="${fila}"][data-col="${col}"]`;
+    const elemento = document.querySelector(selector);
+
+    if (!elemento || elemento.dataset.revelada === "true" || elemento.classList.contains("bandera")) return;
+
+    const valor = tableroLogico[fila][col];
+    revelarVisualmente(elemento, valor);
+
+    if (valor === 0) {
+        for (let x = -1; x <= 1; x++) {
+            for (let y = -1; y <= 1; y++) {
+                let f = fila + x;
+                let c = col + y;
+                if (f >= 0 && f < dimension && c >= 0 && c < dimension) {
+                    revelarRecursivo(f, c);
+                }
+            }
+        }
+    }
+}
+
+function terminarJuego(victoria) {
+    juegoTerminado = true;
+    const msg = document.getElementById("mensaje");
+    if (victoria) {
+        msg.textContent = "¡OLE OLEE LOS CARACOLES! Has ganado 🎉";
+        msg.style.color = "#2ecc71";
     } else {
-        tableroOculto[fila][columna] = tablero[fila][columna];
-        //Revelar celdas adyacentes si es 0
-        if (tablero[fila][columna] === 0) {
-            revelarCeldasAdyacentes(fila, columna);
-        }
+        msg.textContent = "¡BOOM! Has perdido 💥";
+        msg.style.color = "#e74c3c";
+        revelarTodasLasMinas();
     }
-
-    //Comprobar si ha ganado
-    let celdasReveladas = 0;
-    for (let i = 0; i < dimension; i++) { //Recorro la matriz y cuento las celdas que no son X
-        for (let j = 0; j < dimension; j++) {
-            if (tableroOculto[i][j] !== 'X') {
-                celdasReveladas++;
-            }
-        }
-    }
-    if (celdasReveladas === dimension * dimension - numMinas) {
-        console.clear();
-        alert("OLE OLEE LOS CARACOLES");
-        console.table(tablero);
-        return false;
-    }
-
-    return true;
 }
 
-//Si la celda es 0, revelar las celdas adyacentes
-function revelarCeldasAdyacentes(fila, columna) {
-    for (let x = -1; x <= 1; x++) {
-        for (let y = -1; y <= 1; y++) {
-            if (x === 0 && y === 0) continue;
-            let comprovarFila = fila + x;
-            let comprovarColumna = columna + y;
-            if (comprovarFila >= 0 && comprovarFila < dimension && comprovarColumna >= 0 && comprovarColumna < dimension) {
-                if (tableroOculto[comprovarFila][comprovarColumna] === 'X' && tablero[comprovarFila][comprovarColumna] !== '*') {
-                    tableroOculto[comprovarFila][comprovarColumna] = tablero[comprovarFila][comprovarColumna];
-                    if (tablero[comprovarFila][comprovarColumna] === 0) {
-                        revelarCeldasAdyacentes(comprovarFila, comprovarColumna);
-                    }
+function revelarTodasLasMinas() {
+    for (let i = 0; i < dimension; i++) {
+        for (let j = 0; j < dimension; j++) {
+            if (tableroLogico[i][j] === '*') {
+                const celda = document.querySelector(`.celda[data-fila="${i}"][data-col="${j}"]`);
+                if(celda && !celda.classList.contains("bandera")) { // Opcional: no revelar si tenía bandera bien puesta
+                    celda.classList.add("bomba");
+                    celda.textContent = "💣";
                 }
             }
         }
     }
 }
 
-//Generar tablero vacio
-function generarTablero(dimension) {
-    let tablero = [];
-    for (let i = 0; i < dimension; i++) {
-        tablero[i] = [];
-        for (let j = 0; j < dimension; j++) {
-            tablero[i][j] = 0;
-        }
-    }
-    return tablero;
-}
+function comprobarVictoria() {
+    const celdas = document.querySelectorAll(".celda");
+    let reveladas = 0;
+    celdas.forEach(c => {
+        if (c.dataset.revelada === "true") reveladas++;
+    });
 
-function guardarPartida() {
-    let partida = {
-        tablero: tablero,
-        tableroOculto: tableroOculto,
-        dimension: dimension,
-        numMinas: numMinas
-    };
-    console.clear();
-    console.log(JSON.stringify(partida));
+    const totalCeldas = dimension * dimension;
+    // Si las celdas reveladas + las minas son el total, has ganado
+    if (reveladas === totalCeldas - numMinas) {
+        terminarJuego(true);
+    }
 }
