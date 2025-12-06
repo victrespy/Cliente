@@ -12,6 +12,17 @@
         
         <button id="btnReiniciar" class="oculto">Nueva Partida</button>
 
+        <div id="panelInfo" class="oculto">
+            <div class="dato-hud">
+                <span class="label-hud">Tiempo:</span>
+                <span id="timer">00:00</span>
+            </div>
+            <div class="dato-hud">
+                <span class="label-hud">Clavos Restantes:</span>
+                <span id="contadorBanderas">0</span>
+            </div>
+        </div>
+
         <h2 id="mensajeEstado">La bruma domina la noche...</h2>
         
         <div id="tablero"></div>
@@ -20,12 +31,39 @@
     <div id="modalConfig" class="modal-overlay">
         <div class="modal-content">
             <h2>Configuración Alomántica</h2>
+            
             <div class="controles-modal">
                 <label for="inputDimension">Dimensión del tablero:</label>
-                
                 <input type="text" id="inputDimension" value="10" maxlength="2" placeholder="5-20">
                 
-                <button id="btnEmpezar">Quemar Atium</button>
+                <label>Nivel de Poder:</label>
+                
+                <div class="dificultad-selector">
+                    
+                    <div class="opcion-dificultad" id="difFacil" onclick="setDificultad('facil')">
+                        <div class="circulo-metal">
+                            <img src="img/estaño.webp" alt="Símbolo Estaño">
+                        </div>
+                        <span class="nombre-metal">Estaño</span>
+                    </div>
+
+                    <div class="opcion-dificultad seleccionado" id="difMedio" onclick="setDificultad('medio')">
+                        <div class="circulo-metal">
+                            <img src="img/Bronce.webp" alt="Símbolo Bronce">
+                        </div>
+                        <span class="nombre-metal">Bronce</span>
+                    </div>
+
+                    <div class="opcion-dificultad" id="difDificil" onclick="setDificultad('dificil')">
+                        <div class="circulo-metal">
+                            <img src="img/Atium.webp" alt="Símbolo Atium">
+                        </div>
+                        <span class="nombre-metal">Atium</span>
+                    </div>
+
+                </div>
+
+                <button id="btnEmpezar">Quemar Metales</button>
             </div>
         </div>
     </div>

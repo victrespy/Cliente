@@ -19,14 +19,11 @@
 
 body {
     font-family: 'Cinzel', serif;
-    
-    /* IMAGEN DE FONDO */
     background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('img/background.jpeg');
     background-size: cover;       
     background-position: center;  
     background-repeat: no-repeat; 
     background-attachment: fixed; 
-
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -34,7 +31,6 @@ body {
     color: var(--text-primary);
 }
 
-/* --- CONTENEDOR PRINCIPAL (Efecto Cristal) --- */
 .container {
     text-align: center;
     background: var(--glass-bg);
@@ -60,6 +56,38 @@ h1 {
     color: var(--text-secondary);
     margin-bottom: 20px;
     min-height: 1.5em;
+}
+
+/* --- PANEL HUD (TIEMPO Y BANDERAS) --- */
+#panelInfo {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 15px;
+    font-family: 'Roboto', sans-serif;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid var(--glass-border);
+}
+
+.dato-hud {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.label-hud {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#timer, #contadorBanderas {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--accent-color);
 }
 
 /* --- CONTROLES Y BOTONES --- */
@@ -88,6 +116,87 @@ button:active {
     transform: translateY(1px);
 }
 
+/* --- NUEVO SELECTOR DE DIFICULTAD (IMG CIRCULARES) --- */
+.dificultad-selector {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.opcion-dificultad {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    opacity: 0.6; /* Un poco más visible por defecto al ser claro */
+    transition: all 0.3s ease;
+}
+
+/* Contenedor circular de la imagen */
+.circulo-metal {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    
+    /* CAMBIO AQUÍ: Fondo claro translúcido en vez de oscuro */
+    background: rgba(255, 255, 255, 0.733); 
+    
+    border: 2px solid var(--glass-border);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.circulo-metal img {
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
+    filter: drop-shadow(0 0 2px rgba(0,0,0,0.5));
+}
+
+.nombre-metal {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* --- ESTADOS: HOVER Y SELECCIONADO --- */
+
+.opcion-dificultad:hover,
+.opcion-dificultad.seleccionado {
+    opacity: 1;
+    transform: translateY(-5px);
+}
+
+.opcion-dificultad.seleccionado .circulo-metal {
+    box-shadow: 0 0 15px currentColor, inset 0 0 10px currentColor;
+    border-color: currentColor;
+    
+    /* Hacemos el fondo un pelín más blanco al seleccionar para que brille */
+    background: rgba(255, 255, 255, 0.76);
+    
+    transform: scale(1.1);
+}
+
+.opcion-dificultad.seleccionado .nombre-metal {
+    color: white;
+    text-shadow: 0 0 5px currentColor;
+}
+
+/* COLORES ESPECÍFICOS POR ID */
+#difFacil { color: #27ae60; }   /* Verde - Estaño */
+#difMedio { color: #d35400; }   /* Bronce/Naranja oscuro */
+#difDificil { color: #c0392b; } /* Rojo/Negro - Atium */
+
+
+/* Inputs del formulario */
 input {
     padding: 10px;
     border-radius: 8px;
@@ -125,8 +234,6 @@ input {
     user-select: none;
     transition: all 0.2s ease;
     box-shadow: 3px 3px 6px rgba(0,0,0,0.3), -1px -1px 2px rgba(255,255,255,0.05);
-    
-    /* Necesario para posicionar el pseudo-elemento de fondo */
     position: relative;
     overflow: hidden;
     z-index: 1; 
@@ -138,37 +245,24 @@ input {
     z-index: 10;
 }
 
-/* --- ESTILO REVELADO (CON ROTACIÓN) --- */
 .celda.revelada {
-    /* Fondo tintado oscuro para legibilidad */
     background-color: rgba(0, 0, 0, 0.4) !important;
-    
-    /* Quitamos la imagen directa de aquí y la pasamos al ::before */
     box-shadow: inset 2px 2px 5px rgba(0,0,0,0.7);
     cursor: default;
     border: 1px solid rgba(255,255,255,0.05);
-    
-    /* Sombra de texto fuerte para leer sobre piedra */
     text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 
-/* Pseudo-elemento para la imagen de fondo rotada */
 .celda.revelada::before {
     content: "";
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    
     background-image: url('img/tile1.png');
     background-size: cover;
-    
-    /* Aquí aplicamos la rotación aleatoria generada por JS */
     transform: rotate(var(--rotacion, 0deg));
-    
-    /* Se coloca detrás del contenido de la celda pero debajo del tinte de fondo */
     z-index: -1; 
 }
 
-/* Colores de los números */
 .celda[data-val="1"] { color: #3498db; }
 .celda[data-val="2"] { color: #2ecc71; }
 .celda[data-val="3"] { color: #e74c3c; }
@@ -176,26 +270,21 @@ input {
 .celda[data-val="5"] { color: #f1c40f; }
 .celda[data-val="6"] { color: #e67e22; }
 
-/* --- BANDERA (CLAVO HEMALÚRGICO) --- */
 .celda.bandera {
-    /* Fondo AZUL estilo "Líneas de Hierro" */
     background-color: rgba(41, 128, 185, 0.6) !important;
     border: 1px solid #3498db;
-    box-shadow: 0 0 15px rgba(52, 152, 219, 0.8); /* Resplandor azul */
-    
-    /* Color del SVG (Clavo Plateado) */
+    box-shadow: 0 0 15px rgba(52, 152, 219, 0.8);
     color: #bdc3c7; 
 }
 
-/* --- MODIFICACIÓN PARA BOMBA CON IMAGEN DE FONDO --- */
 .celda.bomba {
     background-image: url('img/inquisitor-head.webp');
-    background-size: cover; /* Asegura que la imagen cubra toda la celda */
+    background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background-color: #52013ad0; /* Un tinte rojo oscuro por si la imagen tiene transparencias */
+    background-color: #52013ad0;
     animation: shake 0.5s;
-    border: 1px solid #c0392b; /* Borde rojo sutil para destacar */
+    border: 1px solid #c0392b;
 }
 
 @keyframes shake {
@@ -205,13 +294,10 @@ input {
     100% { transform: translate(0, 0) rotate(0deg); }
 }
 
-/* --- MODAL (POP-UP) --- */
+/* --- MODAL --- */
 .modal-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0, 0, 0, 0.521);
     display: flex;
     justify-content: center;
@@ -227,7 +313,7 @@ input {
     border: 1px solid var(--glass-border);
     box-shadow: 0 20px 50px rgba(0,0,0,0.5);
     text-align: center;
-    max-width: 400px;
+    max-width: 500px;
     width: 90%;
 }
 
@@ -236,7 +322,6 @@ input {
     color: var(--text-primary);
 }
 
-/* AJUSTES DEL FORMULARIO MODAL */
 .controles-modal {
     display: flex;
     flex-direction: column; 
@@ -250,13 +335,6 @@ input {
     font-family: 'Cinzel', serif;
 }
 
-.controles-modal input {
-    width: 80px;      
-    font-size: 1.2rem;
-    padding: 10px;
-    text-align: center;
-}
-
 .oculto {
     display: none !important;
 }
@@ -267,4 +345,15 @@ input {
 }
 #btnReiniciar:hover {
     background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+}
+
+/* --- EFECTO DERROTA --- */
+.tablero-derrota .celda:not(.bomba)::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(200, 0, 0, 0.4);
+    pointer-events: none;
+    z-index: 20;
+    border-radius: 8px;
 }
