@@ -8,7 +8,7 @@
     --accent-color: #3498db;
     --text-primary: #ecf0f1;
     --text-secondary: #bdc3c7;
-    --cell-size: 50px;
+    --cell-size: 60px;
 }
 
 * {
@@ -120,7 +120,7 @@ input {
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    font-size: 1.5rem;
+    font-size: 2rem;
     font-weight: bold;
     user-select: none;
     transition: all 0.2s ease;
@@ -187,9 +187,15 @@ input {
     color: #bdc3c7; 
 }
 
+/* --- MODIFICACIÓN PARA BOMBA CON IMAGEN DE FONDO --- */
 .celda.bomba {
-    background: #52013ad0;
+    background-image: url('img/inquisitor-head.webp');
+    background-size: cover; /* Asegura que la imagen cubra toda la celda */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #52013ad0; /* Un tinte rojo oscuro por si la imagen tiene transparencias */
     animation: shake 0.5s;
+    border: 1px solid #c0392b; /* Borde rojo sutil para destacar */
 }
 
 @keyframes shake {

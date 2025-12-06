@@ -12,18 +12,7 @@ const btnReiniciar = document.getElementById("btnReiniciar");
 
 // --- CONSTANTES ---
 
-// SVG: Cabeza de Inquisidor (Mina)
-const SVG_INQUISIDOR = `
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="32" height="32" style="display:block; margin:auto;">
-  <title>Cabeza de Inquisidor</title>
-  <g fill="#36454F" color="#36454F"> 
-    <path d="M32,8 C22,8 14,16 14,28 C14,38 18,46 24,50 L24,62 L40,62 L40,50 C46,46 50,38 50,28 C50,16 42,8 32,8 Z"/>
-    <path d="M18,24 L14,28 L18,32 L22,28 Z M20,30 L48,54 L52,50 L24,26 Z" />
-    <path d="M46,24 L42,28 L46,32 L50,28 Z M44,30 L16,54 L12,50 L40,26 Z" />
-  </g>
-</svg>`;
-
-// SVG: Clavo Hemalúrgico (Bandera)
+// SVG: Clavo Hemalúrgico (Bandera) - MANTENEMOS ESTE
 const SVG_CLAVO = `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="32" height="32" style="display:block; margin:auto;">
   <title>Clavo Hemalúrgico</title>
@@ -201,7 +190,7 @@ function manejarClicIzquierdo(evento) {
     if (valor === '*') {
         // CASO MINA (INQUISIDOR)
         celda.classList.add("bomba");
-        celda.innerHTML = SVG_INQUISIDOR; 
+        // YA NO INYECTAMOS EL SVG AQUÍ, LO HACE EL CSS
         gameOver(false); // Perder
     } else if (valor === 0) {
         // CASO 0: Recursividad
@@ -313,7 +302,7 @@ function revelarTodasLasMinas() {
                 let celda = document.querySelector(`div[data-f="${i}"][data-c="${j}"]`);
                 if (celda && !celda.classList.contains("bandera")) {
                     celda.classList.add("bomba");
-                    celda.innerHTML = SVG_INQUISIDOR;
+                    // ELIMINADO: celda.innerHTML = SVG_INQUISIDOR;
                 }
             }
         }
