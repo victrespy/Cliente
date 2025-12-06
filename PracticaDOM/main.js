@@ -222,6 +222,12 @@ function revelarCelda(celda, valor) {
     celda.classList.add("revelada");
     celda.textContent = (valor === 0) ? "" : valor;
     
+    // --- ROTACIÓN ALEATORIA DEL FONDO ---
+    // Generamos un ángulo: 0, 90, 180 o 270 grados
+    const grados = Math.floor(Math.random() * 4) * 90; 
+    // Lo guardamos en una variable CSS para que lo use el estilo
+    celda.style.setProperty('--rotacion', `${grados}deg`);
+
     // Atributo para colorear según el metal (CSS Mistborn)
     if (valor > 0) celda.setAttribute("data-val", valor);
 }
@@ -297,7 +303,6 @@ function revelarTodasLasMinas() {
 }
 
 function desactivarTableroVictoria() {
-    // Visualmente marcar las minas restantes como banderas automáticamente (opcional pero elegante)
     for (let i = 0; i < dimension; i++) {
         for (let j = 0; j < dimension; j++) {
             if (tableroLogico[i][j] === '*') {
