@@ -16,8 +16,30 @@ function mostrarTablero() {
 }
 
 function mostrarFormulario() {
-    console.log("Mostrando el formulario de registro...");
-    // Aquí iría la lógica para mostrar el formulario de registro
+    const app = document.getElementById("app");
+
+    // Limpiamos el contenido previo
+    app.innerHTML = "";
+
+    // Creamos el formulario
+    const formulario = document.createElement("form");
+    formulario.id = "form-usuario";
+    app.appendChild(formulario);
+
+    const titulo = document.createElement("h2");
+    titulo.textContent = "Configuración del Tablero";
+    formulario.appendChild(titulo);
+    
+    const inputColumnas = document.createElement("input");
+    inputColumnas.type = "number";           // Hacemos que sea numérico
+    inputColumnas.placeholder = "Nº de columnas"; // Texto de ayuda
+    inputColumnas.id = "num-columnas";       // Le damos un ID para buscarlo luego
+    
+    formulario.appendChild(inputColumnas);
+
+    const botonContinuar = document.createElement("button");
+    botonContinuar.textContent = "Continuar";
+    formulario.appendChild(botonContinuar);
 }
 
 // A la hora de cargar la página, comprobamos si existe un usuario
