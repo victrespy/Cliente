@@ -40,6 +40,15 @@ function mostrarTablero() {
         contenedorTareas.id = `tareas-columna-${columna.id}`;
         columnaDiv.appendChild(contenedorTareas);
 
+        // Recorremos las tareas de la columna
+        columna.tareas.forEach(tarea => {
+            const tareaDiv = document.createElement("div");
+            tareaDiv.textContent = tarea.contenido;
+            tareaDiv.classList.add("tarea-card");
+            
+            contenedorTareas.appendChild(tareaDiv);
+        });
+
         // Añadimos la columna al tablero
         contenedorTablero.appendChild(columnaDiv);
     });
@@ -81,38 +90,39 @@ function mostrarTablero() {
     // Pongo todo esto al main
     app.appendChild(formTarea);
 
-    
+    // Aniadir la tarea a la columna
     btnAdd.addEventListener("click", function() {
         const texto = inputTarea.value;
         const idColumnaDestino = parseInt(selectColumna.value);
 
-        
+        // Comprobar que no este vacia
         if (texto.trim() === "") {
             alert("La tarea no puede estar vacía.");
             return;
         }
 
-        
+        // Buscar la columna destino
         const columnaDestino = config.columnas.find(c => c.id === idColumnaDestino);
 
-        
+        // Avisar si la columna esta llena
         if (columnaDestino.tareas.length >= columnaDestino.limite) {
             alert("¡Esa columna está llena! Mueve tareas o elige otra.");
             return;
         }
         
+        // Hago el objeto tarea, le pongo id fecha para que sea unico
         const nuevaTarea = {
             id: Date.now(), 
             contenido: texto
         };
 
-        
+        // Aniadir la tarea a la columna (el objeto columna)
         columnaDestino.tareas.push(nuevaTarea);
 
-        
+        // Actualizar el localStorage
         localStorage.setItem("datos_tablero", JSON.stringify(config));
 
-        
+        // Recargar la pagina
         mostrarTablero(); 
     });
 }
