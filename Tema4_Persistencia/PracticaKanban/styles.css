@@ -1,0 +1,46 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif
+}
+
+#tablero-contenedor {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+}
+
+.columna-tablero {
+    border: 1px solid #ccc;
+    padding: 10px;
+    width: 250px;
+    background-color: #f9f9f9;
+}
+
+.contenedor-tareas {
+    min-height: 50px;
+    margin-top: 10px;
+}
+
+.form-tareas {
+    margin-top: 20px;
+    padding: 20px;
+    border-top: 2px solid #333;
+    
+    select {
+        padding: 5px;
+        margin-right: 10px;
+    }
+
+    input {
+        padding: 5px;
+        margin-right: 10px;
+    }
+    
+    button {
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+}
+

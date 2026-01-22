@@ -1,9 +1,9 @@
 //Comprobar si existe un usuario guardado
-function existeUsuario() {
-    const usuario = localStorage.getItem("datos_tablero");
+function tieneConfiguracion() {
+    const configuracion = localStorage.getItem("datos_tablero");
     
     // Si es distinto de null, es que existe
-    if (usuario !== null) {
+    if (configuracion !== null) {
         return true;
     } else {
         return false;
@@ -11,8 +11,110 @@ function existeUsuario() {
 }
 
 function mostrarTablero() {
-    console.log("Mostrando el tablero Kanban...");
-    // Aquí iría la lógica para mostrar el tablero Kanban
+    // Limpiamos el contenido previo
+    const app = document.getElementById("app");
+    app.innerHTML = "";
+
+    // Pillar los datos
+    const datosJSON = localStorage.getItem("datos_tablero");
+    const config = JSON.parse(datosJSON);
+
+    // Creo un contenedor para el tablero
+    const contenedorTablero = document.createElement("section");
+    contenedorTablero.id = "tablero-contenedor";
+    app.appendChild(contenedorTablero);
+
+    // Recorremos las columnas guardadas
+    config.columnas.forEach(columna => {
+        const columnaDiv = document.createElement("div");
+        columnaDiv.classList.add("columna-tablero");
+        
+        // Titulo
+        const titulo = document.createElement("h3");
+        titulo.textContent = `${columna.titulo} (0/${columna.limite})`;
+        columnaDiv.appendChild(titulo);
+
+        // Donde iran las tareas
+        const contenedorTareas = document.createElement("div");
+        contenedorTareas.classList.add("contenedor-tareas");
+        contenedorTareas.id = `tareas-columna-${columna.id}`;
+        columnaDiv.appendChild(contenedorTareas);
+
+        // Añadimos la columna al tablero
+        contenedorTablero.appendChild(columnaDiv);
+    });
+
+    // Voy a hacer un formulario para añadir tareas a cualquiera de las columnas en vez de una entrada por columna
+
+    // Creo el formulario
+    const formTarea = document.createElement("div");
+    formTarea.classList.add("form-tareas");
+    
+    const tituloForm = document.createElement("h3");
+    tituloForm.textContent = "Añadir Nueva Tarea";
+    formTarea.appendChild(tituloForm);
+
+    // Select
+    const selectColumna = document.createElement("select");
+    selectColumna.id = "select-columna-destino";
+    
+    config.columnas.forEach(columna => {
+        const option = document.createElement("option");
+        option.value = columna.id;
+        option.textContent = columna.titulo;
+        selectColumna.appendChild(option);
+    });
+    formTarea.appendChild(selectColumna);
+
+    //Input
+    const inputTarea = document.createElement("input");
+    inputTarea.type = "text";
+    inputTarea.placeholder = "Descripción de la tarea";
+    inputTarea.classList.add("input-texto-tarea");
+    formTarea.appendChild(inputTarea);
+
+    // Boton
+    const btnAdd = document.createElement("button");
+    btnAdd.textContent = "Añadir Tarea";
+    formTarea.appendChild(btnAdd);
+
+    // Pongo todo esto al main
+    app.appendChild(formTarea);
+
+    
+    btnAdd.addEventListener("click", function() {
+        const texto = inputTarea.value;
+        const idColumnaDestino = parseInt(selectColumna.value);
+
+        
+        if (texto.trim() === "") {
+            alert("La tarea no puede estar vacía.");
+            return;
+        }
+
+        
+        const columnaDestino = config.columnas.find(c => c.id === idColumnaDestino);
+
+        
+        if (columnaDestino.tareas.length >= columnaDestino.limite) {
+            alert("¡Esa columna está llena! Mueve tareas o elige otra.");
+            return;
+        }
+        
+        const nuevaTarea = {
+            id: Date.now(), 
+            contenido: texto
+        };
+
+        
+        columnaDestino.tareas.push(nuevaTarea);
+
+        
+        localStorage.setItem("datos_tablero", JSON.stringify(config));
+
+        
+        mostrarTablero(); 
+    });
 }
 
 function mostrarFormulario() {
@@ -115,11 +217,11 @@ function generarCamposColumnas(cantidad) {
     // Evento para guardar
     botonGuardar.addEventListener("click", function(e) {
         e.preventDefault();
-        procesarConfiguracion();
+        guardarConfiguracion();
     });
 }
 
-function procesarConfiguracion() {
+function guardarConfiguracion() {
     // Buscamos los inpust de antes
     const inputsNombres = document.querySelectorAll(".input-nombre-columna");
     const inputsLimites = document.querySelectorAll(".input-limite-columna");
@@ -153,7 +255,7 @@ function procesarConfiguracion() {
     }
 
     // Guardamos la configuración en localStorage
-    localStorage.setItem("kanban_config", JSON.stringify(configuracionTablero));
+    localStorage.setItem("datos_tablero", JSON.stringify(configuracionTablero));
 
     console.log("Configuración guardada:", configuracionTablero);
 
@@ -163,7 +265,7 @@ function procesarConfiguracion() {
 
 // A la hora de cargar la página, comprobamos si existe un usuario
 window.onload = function() {
-    if (existeUsuario()) {
+    if (tieneConfiguracion()) {
         mostrarTablero();
     } else {
         mostrarFormulario();
