@@ -45,8 +45,41 @@ function mostrarTablero() {
             const tareaDiv = document.createElement("div");
             tareaDiv.textContent = tarea.contenido;
             tareaDiv.classList.add("tarea-card");
+
+            // Evento para borrar una tarea
+            tareaDiv.addEventListener("dblclick", function() {
+
+                // Confirmar
+                const confirmar = confirm("¿Quieres borrar esta tarea?");
+                if (confirmar) {
+                    eliminarTarea(columna.id, tarea.id);
+                }
+            });
+
+            // Drag n grop
+            tareaDiv.setAttribute("draggable", "true");
+            tareaDiv.addEventListener("dragstart", function(e) {
+                const datosEnvio = {
+                    idTarea: tarea.id,
+                    idColumnaOrigen: columna.id
+                };
+                // Paso los datos como texto plano en formato JSON
+                e.dataTransfer.setData("text/plain", JSON.stringify(datosEnvio));
+            });
             
             contenedorTareas.appendChild(tareaDiv);
+        });
+
+        // El drop
+        contenedorTareas.addEventListener("dragover", function(e) {
+            e.preventDefault(); // para poder soltar
+        });
+        contenedorTareas.addEventListener("drop", function(e) {
+            e.preventDefault();
+            // Recuperar los datos que guardamos al empezar a arrastrar
+            const datosRecibidos = JSON.parse(e.dataTransfer.getData("text/plain"));
+            
+            moverTarea(datosRecibidos.idTarea, datosRecibidos.idColumnaOrigen, columna.id);
         });
 
         // Añadimos la columna al tablero
@@ -125,6 +158,46 @@ function mostrarTablero() {
         // Recargar la pagina
         mostrarTablero(); 
     });
+}
+
+function eliminarTarea(idColumna, idTarea) {
+    // Cargamos los datos
+    const config = JSON.parse(localStorage.getItem("datos_tablero"));
+
+    // Buscamos la columna donde esta la tarea y quitamos la tarea
+    const columna = config.columnas.find(c => c.id === idColumna);
+    columna.tareas = columna.tareas.filter(t => t.id !== idTarea);
+
+    //Guardamos y refrescamos
+    localStorage.setItem("datos_tablero", JSON.stringify(config));
+    mostrarTablero();
+}
+
+function moverTarea(idTarea, idColumnaOrigen, idColumnaDestino) {
+    // Si es la misma, no hacemos nada
+    if (idColumnaOrigen === idColumnaDestino) return;
+
+    // Cargamos los datos
+    const config = JSON.parse(localStorage.getItem("datos_tablero"));
+    
+    // seleccionar las columnas que queremos
+    const colOrigen = config.columnas.find(c => c.id === idColumnaOrigen);
+    const colDestino = config.columnas.find(c => c.id === idColumnaDestino);
+
+    // comprobar el limite
+    if (colDestino.tareas.length >= colDestino.limite) {
+        alert("No puedes mover la tarea: la columna destino está llena.");
+        return;
+    }
+
+    // Buscamos la tarea a mover, la borramos del origen y la añadimos al destino
+    const tareaMover = colOrigen.tareas.find(t => t.id === idTarea);
+    colOrigen.tareas = colOrigen.tareas.filter(t => t.id !== idTarea);
+    colDestino.tareas.push(tareaMover);
+
+    // Guardar y cargar
+    localStorage.setItem("datos_tablero", JSON.stringify(config));
+    mostrarTablero();
 }
 
 function mostrarFormulario() {
