@@ -1,72 +1,325 @@
+/* =========================================
+   PALETA DE COLORES (Estricta)
+   #040D12 - Darkest (Fondo principal)
+   #183D3D - Dark (Contenedores)
+   #5C8374 - Medium (Elementos/Acentos)
+   #93B1A6 - Light (Texto/Brillos)
+   ========================================= */
+
+:root {
+    --color-bg:       #040D12;
+    --color-surface:  #183D3D;
+    --color-element:  #5C8374;
+    --color-text:     #93B1A6;
+    
+    --bg-body: var(--color-bg);
+    --bg-card: var(--color-surface);
+    --text-main: var(--color-text);
+    --text-inverse: var(--color-bg); 
+    --border-subtle: var(--color-element);
+}
+
+/* =========================================
+   RESET Y BASE
+   ========================================= */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: sans-serif
 }
 
-#tablero-contenedor {
-    display: flex;
-    gap: 20px;
-    padding: 20px;
-}
-
-.columna-tablero {
-    border: 1px solid #ccc;
-    padding: 10px;
-    width: 250px;
-    background-color: #f9f9f9;
+body {
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    line-height: 1.6;
+    height: 100vh; /* Altura fija para evitar scroll en el body si no hace falta */
     display: flex;
     flex-direction: column;
-    gap: 10px;
 }
 
-.contenedor-tareas {
-    min-height: 50px;
-    margin-top: 10px;
-    flex-grow: 1; /* Ocupa todo el espacio sobrante */
-    transition: background-color 0.2s;
-
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
 }
-
-.contenido-tareas.drag-over {
-    background-color: #e2e4e9;
+::-webkit-scrollbar-track {
+    background: var(--bg-body);
 }
-
-.form-tareas {
-    margin-top: 20px;
-    padding: 20px;
-    border-top: 2px solid #333;
-    
-    select {
-        padding: 5px;
-        margin-right: 10px;
-    }
-
-    input {
-        padding: 5px;
-        margin-right: 10px;
-    }
-
-    button {
-        padding: 5px 10px;
-        cursor: pointer;
-    }
-}
-
-.tarea-card {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    padding: 10px;
-    margin: 10px 0;
+::-webkit-scrollbar-thumb {
+    background: var(--color-surface);
+    border: 1px solid var(--bg-body);
     border-radius: 5px;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
-    cursor: pointer;
-    border-left: 4px solid #0079bf; /* Un detallito de color */
-    transition: transform 0.1s, box-shadow 0.1s;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-element);
 }
 
-.tarea-card:hover {
-    background-color: #f4f5f7;
-    transform: translateY(-2px); /* Pequeña elevación */
+/* =========================================
+   HEADER
+   ========================================= */
+header {
+    background-color: var(--bg-card);
+    padding: 0.8rem 2rem;
+    display: flex;
+    justify-content: flex-end;
+    border-bottom: 2px solid var(--color-bg);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    flex-shrink: 0; 
+}
+
+button {
+    background-color: var(--color-text); 
+    color: var(--text-inverse);          
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.8rem;
+    white-space: nowrap; /* Evita que el texto del botón salte de línea */
+}
+
+button:hover {
+    background-color: var(--color-element);
+    color: var(--color-text); 
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+}
+
+#btn-reset {
+    background-color: transparent;
+    border: 2px solid var(--color-element);
+    color: var(--color-element);
+}
+
+#btn-reset:hover {
+    background-color: var(--color-element);
+    color: var(--color-bg);
+}
+
+/* =========================================
+   CONTENEDOR PRINCIPAL (APP)
+   ========================================= */
+#app {
+    flex-grow: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Evitamos scroll doble */
+    
+    /* CENTRADO PERFECTO DEL FORMULARIO DE INICIO */
+    /* Estas propiedades centran a los hijos directos (el form) */
+    align-items: center; 
+    justify-content: center;
+}
+
+/* =========================================
+   FORMULARIOS DE CONFIGURACIÓN (INICIO)
+   ========================================= */
+#app > form {
+    width: 100%;
+    max-width: 400px; /* Un poco más estrecho para verse más elegante */
+    background-color: var(--bg-card);
+    padding: 3rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-subtle);
+    text-align: center;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.5); /* Sombra más potente para dar flotabilidad */
+    
+    /* Animación de entrada */
+    animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+#app > form h2 {
+    margin-bottom: 2rem;
+    color: var(--text-main);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-bottom: 2px solid var(--color-element);
+    display: inline-block;
+    padding-bottom: 10px;
+}
+
+fieldset {
+    border: 1px solid var(--color-element);
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: rgba(4, 13, 18, 0.5);
+    text-align: left; /* Alineamos los inputs dentro del fieldset a la izquierda */
+}
+
+legend {
+    color: var(--color-text);
+    padding: 0 8px;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+}
+
+/* Inputs y Selects Generales */
+input, select {
+    width: 100%;
+    padding: 12px;
+    margin: 5px 0 15px 0; /* Espaciado uniforme */
+    background-color: var(--bg-body);
+    border: 1px solid var(--color-element);
+    border-radius: 4px;
+    color: var(--text-main);
+    font-size: 1rem;
+    transition: border 0.2s, box-shadow 0.2s;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--color-text);
+    box-shadow: 0 0 8px rgba(92, 131, 116, 0.4);
+}
+
+/* =========================================
+   TABLERO KANBAN
+   ========================================= */
+#tablero-contenedor {
+    /* Reseteamos el align-items del padre #app para que el tablero ocupe todo */
+    align-self: stretch; 
+    
+    display: flex;
+    flex-grow: 1;
+    gap: 20px;
+    padding: 30px;
+    overflow-x: auto; /* Scroll horizontal solo aquí */
+    justify-content: center; /* Centramos las columnas si hay pocas */
+    align-items: flex-start;
+}
+
+/* Columnas */
+.columna-tablero {
+    background-color: var(--bg-card);
+    min-width: 280px;
+    width: 280px;
+    max-height: 100%; /* Se adapta a la altura disponible */
+    border-radius: 8px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border-subtle);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    flex-shrink: 0;
+}
+
+.columna-tablero h3 {
+    font-size: 1rem;
+    color: var(--text-main);
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 2px solid var(--color-element);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+}
+
+/* =========================================
+   TAREAS (CARDS)
+   ========================================= */
+.contenedor-tareas {
+    flex-grow: 1;
+    min-height: 50px;
+    padding: 2px;
+    overflow-y: auto; /* Scroll dentro de la columna */
+    border-radius: 4px;
+}
+
+.contenedor-tareas.drag-over {
+    background-color: rgba(92, 131, 116, 0.1);
+    border: 2px dashed var(--color-element);
+}
+
+.contenedor-tareas > div {
+    background-color: var(--color-element); 
+    color: var(--bg-body);                  
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    cursor: grab;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border-left: 4px solid var(--color-text); 
+    transition: transform 0.2s, box-shadow 0.2s;
+    word-break: break-word;
+}
+
+.contenedor-tareas > div:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+    background-color: var(--color-text);
+    color: var(--bg-body);
+}
+
+/* =========================================
+   PANEL AÑADIR TAREA (SOLICITADO EN UNA LÍNEA)
+   ========================================= */
+.form-tareas, 
+#app > div:last-child:not(#tablero-contenedor) {
+    /* Posicionamiento */
+    align-self: stretch; /* Ocupa todo el ancho */
+    margin: 0 30px 20px 30px;
+    padding: 15px 20px;
+    
+    /* Estilo Caja */
+    background-color: var(--bg-card);
+    border-radius: 8px;
+    border: 1px solid var(--color-element);
+    box-shadow: 0 -4px 10px rgba(0,0,0,0.2);
+
+    /* LAYOUT FLEX EN UNA SOLA LÍNEA */
+    display: flex;
+    flex-direction: row;      /* Elementos en fila */
+    flex-wrap: nowrap;        /* PROHIBIDO saltar de línea */
+    align-items: center;      /* Centrados verticalmente */
+    gap: 15px;                /* Espacio entre elementos */
+}
+
+/* Estilo del Título H3 para que quepa en la línea */
+.form-tareas h3,
+#app > div:last-child h3 {
+    margin: 0;
+    padding: 0;
+    border: none;
+    width: auto;             /* Que ocupe solo lo que mide el texto */
+    font-size: 1rem;
+    white-space: nowrap;     /* Que no se parta el texto */
+    color: var(--color-element);
+    margin-right: 10px;
+}
+
+/* El Select no debe ser gigante */
+.form-tareas select,
+#app > div:last-child select {
+    width: auto;             /* Ancho automático según contenido */
+    margin: 0;
+    min-width: 150px;        /* Mínimo para leer bien */
+    cursor: pointer;
+}
+
+/* El input se lleva todo el espacio libre */
+.input-texto-tarea {
+    flex-grow: 1;
+    margin: 0;
+}
+
+/* Botón Añadir */
+.form-tareas button,
+#app > div:last-child button {
+    margin: 0;
+    flex-shrink: 0; /* Que no se encoja nunca */
 }

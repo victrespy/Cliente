@@ -206,7 +206,7 @@ function mostrarFormulario() {
     // Limpiamos el contenido previo
     app.innerHTML = "";
 
-    // CREAMOS EL FORMULARIO
+    // Creamos el formulario
     const formulario = document.createElement("form");
     formulario.id = "form-usuario";
     app.appendChild(formulario);
@@ -261,8 +261,6 @@ function generarCamposColumnas(cantidad) {
     for (let i = 0; i < cantidad; i++) {
         // Creamos un contenedor visual para cada columna
         const contenedor = document.createElement("fieldset");
-        contenedor.style.margin = "10px 0";
-        contenedor.style.padding = "10px";
         
         // Añado una leyenda para identificar la columna
         const leyenda = document.createElement("legend");
@@ -283,7 +281,6 @@ function generarCamposColumnas(cantidad) {
         inputLimite.type = "number";
         inputLimite.placeholder = "Límite de tareas";
         inputLimite.min = 1;
-        inputLimite.style.marginLeft = "10px";
         inputLimite.classList.add("input-limite-columna");
         contenedor.appendChild(inputLimite);
 
@@ -294,7 +291,6 @@ function generarCamposColumnas(cantidad) {
     // Boton para guardar todo
     const botonGuardar = document.createElement("button");
     botonGuardar.textContent = "Finalizar Configuración";
-    botonGuardar.style.marginTop = "20px";
     formulario.appendChild(botonGuardar);
 
     // Evento para guardar
@@ -354,3 +350,13 @@ window.onload = function() {
         mostrarFormulario();
     }
 }
+
+// Aunque no lo pide en el pdf voy a añadir un boton para resetear el tablero
+document.getElementById("btn-reset").addEventListener("click", function() {
+    const confirmar = confirm("¿Seguro que quieres borrar todo y empezar de cero? Se perderán todas las tareas.");
+    
+    if (confirmar) {
+        localStorage.removeItem("datos_tablero");
+        location.reload();
+    }
+});
