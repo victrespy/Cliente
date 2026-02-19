@@ -1,0 +1,26 @@
+.task {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.task-list {
+  list-style: none;
+  padding: 0;
+}
+
+header {
+  background-color: #282c34;
+  padding: 20px;
+  color: white;
+  text-align: center;
+}
+
+button {
+  background-color: #61dafb;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
